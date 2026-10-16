@@ -1,0 +1,218 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Panel del taller | Reparaciones Automovilísticas Stop</title>
+<meta name="robots" content="noindex">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com/3.4.17"></script>
+<script>
+tailwind.config = { theme: { extend: {
+  colors: { ink:'#0a0a0c', coal:'#131317', steel:'#1c1c22', line:'#2b2b33', mist:'#a09fab', chalk:'#f3f2f5', brand:'#e3262f', brandDark:'#c41b24', ok:'#22c55e' },
+  fontFamily: { display:['"Chakra Petch"','sans-serif'], sans:['Inter','sans-serif'] }
+} } }
+</script>
+<style>
+  body{background:#0a0a0c}
+  .octagon{clip-path:polygon(30% 0,70% 0,100% 30%,100% 70%,70% 100%,30% 100%,0 70%,0 30%)}
+  .input{width:100%;background:#0a0a0c;border:1px solid #2b2b33;border-radius:10px;padding:.7rem .9rem;color:#f3f2f5;outline:none;transition:border-color .2s}
+  .input:focus{border-color:#e3262f}
+  .input::placeholder{color:#64636e}
+  .chip{font-size:12px;padding:.45rem .7rem;border-radius:999px;border:1px solid #2b2b33;color:#a09fab;transition:.15s;white-space:nowrap}
+  .chip:hover{border-color:#a09fab;color:#f3f2f5}
+  .chip.on{background:#e3262f;border-color:#e3262f;color:#fff}
+  .chip.done{border-color:rgba(34,197,94,.5);color:#22c55e}
+  .chips{scrollbar-width:thin;scrollbar-color:#2b2b33 transparent}
+  .chips::-webkit-scrollbar{height:4px}.chips::-webkit-scrollbar-thumb{background:#2b2b33;border-radius:4px}
+</style>
+</head>
+<body class="font-sans text-chalk antialiased min-h-screen">
+
+<div class="bg-brand text-white text-center text-xs font-semibold tracking-wide py-2 px-4">BOCETO · Modo demostración — los datos se guardan solo en este navegador</div>
+
+<!-- Acceso -->
+<section id="login" class="min-h-[80vh] grid place-items-center px-4">
+  <form id="loginForm" class="w-full max-w-sm bg-coal border border-line rounded-3xl p-8 text-center">
+    <span class="octagon w-14 h-14 mx-auto bg-brand grid place-items-center font-display font-bold text-sm tracking-wider text-white">STOP</span>
+    <h1 class="font-display text-2xl font-bold mt-5">Panel del taller</h1>
+    <p class="text-sm text-mist mt-1">Acceso para el equipo</p>
+    <input id="pin" type="password" inputmode="numeric" class="input mt-6 text-center font-display tracking-[0.6em] text-xl" placeholder="PIN" autocomplete="off">
+    <p id="pinErr" class="hidden text-sm text-brand mt-2">PIN incorrecto</p>
+    <button class="w-full mt-4 bg-brand hover:bg-brandDark text-white font-semibold py-3 rounded-xl transition">Entrar</button>
+    <p class="text-xs text-mist mt-4">Demo: PIN <b class="text-chalk">1234</b></p>
+  </form>
+</section>
+
+<!-- Panel -->
+<div id="app" class="hidden">
+  <header class="border-b border-line sticky top-0 z-20 bg-ink/90 backdrop-blur">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between gap-3">
+      <div class="flex items-center gap-3">
+        <span class="octagon w-9 h-9 bg-brand grid place-items-center font-display font-bold text-[10px] tracking-wider text-white">STOP</span>
+        <span class="font-display font-bold text-lg">Panel del taller</span>
+      </div>
+      <div class="flex items-center gap-2">
+        <a href="seguimiento.html" target="_blank" class="hidden sm:inline text-sm text-mist hover:text-chalk mr-2">Ver como cliente ↗</a>
+        <button id="nuevoBtn" class="bg-brand hover:bg-brandDark text-white font-semibold text-sm px-4 py-2.5 rounded-full transition">+ Nuevo coche</button>
+      </div>
+    </div>
+  </header>
+
+  <main class="max-w-6xl mx-auto px-4 sm:px-6 py-8">
+    <!-- Resumen -->
+    <div id="resumen" class="grid grid-cols-2 md:grid-cols-4 gap-3"></div>
+
+    <div class="mt-6 flex flex-col sm:flex-row gap-3 sm:items-center justify-between">
+      <input id="filtro" class="input sm:max-w-xs" placeholder="Buscar matrícula o cliente…">
+      <button id="resetBtn" class="text-xs text-mist hover:text-chalk underline self-start sm:self-auto">Reiniciar datos de ejemplo</button>
+    </div>
+
+    <div id="lista" class="mt-6 grid lg:grid-cols-2 gap-5"></div>
+    <p id="vacio" class="hidden mt-10 text-center text-mist">No hay coches en el taller.</p>
+  </main>
+</div>
+
+<!-- Modal nuevo coche -->
+<div id="modal" class="hidden fixed inset-0 z-50 bg-black/70 grid place-items-center p-4">
+  <form id="nuevoForm" class="w-full max-w-lg bg-coal border border-line rounded-3xl p-6 sm:p-8 grid sm:grid-cols-2 gap-3 max-h-[90vh] overflow-auto">
+    <h2 class="sm:col-span-2 font-display text-2xl font-bold">Nuevo coche</h2>
+    <label><span class="text-xs text-mist">Matrícula</span><input name="matricula" class="input mt-1 uppercase font-display tracking-widest" required placeholder="1234 ABC"></label>
+    <label><span class="text-xs text-mist">Cliente</span><input name="cliente" class="input mt-1" required placeholder="Nombre"></label>
+    <label><span class="text-xs text-mist">Teléfono del cliente</span><input name="telefono" class="input mt-1" type="tel" placeholder="600 000 000"></label>
+    <label><span class="text-xs text-mist">Vehículo</span><input name="coche" class="input mt-1" required placeholder="Marca y modelo"></label>
+    <label class="sm:col-span-2"><span class="text-xs text-mist">Trabajo a realizar</span><input name="trabajo" class="input mt-1" required placeholder="Ej. Golpe en paragolpes trasero"></label>
+    <label class="sm:col-span-2"><span class="text-xs text-mist">Entrega prevista</span><input name="entrega" type="date" class="input mt-1" required></label>
+    <div class="sm:col-span-2 flex justify-end gap-2 mt-2">
+      <button type="button" id="cancelar" class="px-5 py-2.5 rounded-full border border-line text-sm hover:border-mist">Cancelar</button>
+      <button class="bg-brand hover:bg-brandDark text-white font-semibold text-sm px-5 py-2.5 rounded-full">Dar de alta</button>
+    </div>
+  </form>
+</div>
+
+<!-- Aviso -->
+<div id="toast" class="hidden fixed bottom-5 left-1/2 -translate-x-1/2 z-50 bg-chalk text-ink text-sm font-medium px-5 py-3 rounded-full shadow-xl"></div>
+
+<script src="estado.js"></script>
+<script>
+  const $ = id => document.getElementById(id);
+  const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  let coches = [];
+
+  /* ---- acceso (demo) ---- */
+  function entrar() { $('login').classList.add('hidden'); $('app').classList.remove('hidden'); coches = cargarCoches(); pintar(); }
+  try { if (sessionStorage.getItem('stop-panel') === '1') entrar(); } catch (e) {}
+  $('loginForm').onsubmit = e => {
+    e.preventDefault();
+    if ($('pin').value === '1234') { try { sessionStorage.setItem('stop-panel', '1'); } catch (e) {} entrar(); }
+    else { $('pinErr').classList.remove('hidden'); $('pin').value = ''; }
+  };
+
+  function toast(msg) { const t = $('toast'); t.textContent = msg; t.classList.remove('hidden'); clearTimeout(t._t); t._t = setTimeout(() => t.classList.add('hidden'), 2200); }
+  function guardar() { guardarCoches(coches); pintar(); }
+  const enlaceCliente = c => new URL(`seguimiento.html?m=${encodeURIComponent(normMatricula(c.matricula))}&c=${c.codigo}`, location.href).href;
+
+  /* ---- pintar ---- */
+  function pintar() {
+    const cuenta = id => coches.filter(c => c.etapa === id).length;
+    const enCurso = coches.filter(c => c.etapa !== 'listo').length;
+    $('resumen').innerHTML = [
+      ['En el taller', coches.length, ''], ['En curso', enCurso, 'text-brand'],
+      ['Esperando presupuesto', cuenta('presupuesto'), ''], ['Listos para recoger', cuenta('listo'), 'text-ok'],
+    ].map(([t, n, cl]) => `<div class="bg-coal border border-line rounded-2xl p-4"><p class="text-xs text-mist uppercase tracking-wider">${t}</p><p class="font-display text-3xl font-bold mt-1 ${cl}">${n}</p></div>`).join('');
+
+    const f = $('filtro').value.trim().toLowerCase();
+    const lista = coches.filter(c => !f || (c.matricula + ' ' + c.cliente + ' ' + c.coche).toLowerCase().includes(f));
+    $('vacio').classList.toggle('hidden', lista.length > 0);
+
+    $('lista').innerHTML = lista.map(c => {
+      const i = coches.indexOf(c), idx = etapaIndex(c.etapa), listo = c.etapa === 'listo';
+      const ultima = c.historial[c.historial.length - 1];
+      return `<article class="bg-coal border ${listo ? 'border-ok/40' : 'border-line'} rounded-3xl p-5 sm:p-6 flex flex-col gap-4">
+        <div class="flex items-start justify-between gap-3">
+          <div>
+            <span class="font-display tracking-[0.2em] bg-chalk text-ink px-3 py-1 rounded-md border-l-[6px] border-[#1d4ed8]">${esc(c.matricula)}</span>
+            <h3 class="font-display text-xl font-semibold mt-3">${esc(c.coche)}</h3>
+            <p class="text-sm text-mist">${esc(c.cliente)}${c.telefono ? ' · ' + esc(c.telefono) : ''} · Código <b class="text-chalk">${esc(c.codigo)}</b></p>
+            <p class="text-sm mt-1">${esc(c.trabajo)}</p>
+          </div>
+          <span class="shrink-0 text-xs px-3 py-1.5 rounded-full ${listo ? 'bg-ok/15 text-ok' : 'bg-brand/15 text-brand'} font-semibold">${esc(etapaNombre(c.etapa))}</span>
+        </div>
+
+        <div class="chips flex gap-1.5 overflow-x-auto pb-1">
+          ${ETAPAS.map((e, k) => `<button class="chip ${k === idx ? 'on' : k < idx ? 'done' : ''}" data-i="${i}" data-etapa="${e.id}">${k < idx ? '✓ ' : ''}${e.nombre}</button>`).join('')}
+        </div>
+
+        <div class="flex gap-2">
+          <input class="input nota" data-i="${i}" placeholder="Añadir nota para el cliente (Enter para guardar)…">
+          <button class="addNota shrink-0 px-4 rounded-xl border border-line hover:border-brand text-sm" data-i="${i}">Añadir</button>
+        </div>
+
+        <p class="text-xs text-mist">Última actualización: ${ultima ? esc(fmtFecha(ultima.fecha)) + ' — “' + esc(ultima.nota) + '”' : '—'}</p>
+
+        <div class="flex flex-wrap items-center gap-2 pt-1 border-t border-line">
+          <label class="text-xs text-mist flex items-center gap-2 mt-3">Entrega
+            <input type="date" class="entrega input !py-1.5 !px-2 !w-auto text-xs" data-i="${i}" value="${c.entrega.slice(0, 10)}"></label>
+          <div class="ml-auto flex flex-wrap gap-2 mt-3">
+            ${!listo ? `<button class="sig text-xs bg-brand hover:bg-brandDark text-white font-semibold px-3 py-2 rounded-full" data-i="${i}">Siguiente paso →</button>` : ''}
+            <button class="copiar text-xs px-3 py-2 rounded-full border border-line hover:border-mist" data-i="${i}">Copiar enlace</button>
+            ${c.telefono ? `<a class="text-xs px-3 py-2 rounded-full bg-[#25d366] text-ink font-semibold" target="_blank" rel="noopener" href="https://wa.me/34${esc(c.telefono.replace(/\D/g, '').slice(-9))}?text=${encodeURIComponent(`Hola ${c.cliente}, tu ${c.coche} está en: ${etapaNombre(c.etapa)}. Puedes seguirlo aquí: ${enlaceCliente(c)}`)}">WhatsApp</a>` : ''}
+            <button class="borrar text-xs px-3 py-2 rounded-full border border-line text-mist hover:text-brand hover:border-brand" data-i="${i}">${listo ? 'Entregado' : 'Quitar'}</button>
+          </div>
+        </div>
+      </article>`;
+    }).join('');
+  }
+
+  /* ---- acciones ---- */
+  function cambiarEtapa(i, etapa, nota) {
+    const c = coches[i]; if (c.etapa === etapa && !nota) return;
+    c.etapa = etapa;
+    c.historial.push({ fecha: new Date().toISOString(), etapa, nota: nota || ETAPAS[etapaIndex(etapa)].desc });
+    guardar(); toast(`${c.matricula}: ${etapaNombre(etapa)}`);
+  }
+  function addNota(i) {
+    const inp = document.querySelector(`.nota[data-i="${i}"]`), txt = inp.value.trim(); if (!txt) return;
+    coches[i].historial.push({ fecha: new Date().toISOString(), etapa: coches[i].etapa, nota: txt });
+    guardar(); toast('Nota añadida');
+  }
+
+  $('lista').addEventListener('click', e => {
+    const b = e.target.closest('button'); if (!b) return;
+    const i = +b.dataset.i, c = coches[i];
+    if (b.dataset.etapa) cambiarEtapa(i, b.dataset.etapa);
+    else if (b.classList.contains('sig')) cambiarEtapa(i, ETAPAS[etapaIndex(c.etapa) + 1].id);
+    else if (b.classList.contains('addNota')) addNota(i);
+    else if (b.classList.contains('copiar')) { navigator.clipboard?.writeText(enlaceCliente(c)).then(() => toast('Enlace copiado'), () => prompt('Enlace para el cliente:', enlaceCliente(c))); }
+    else if (b.classList.contains('borrar') && confirm(`¿Quitar ${c.matricula} del panel?`)) { coches.splice(i, 1); guardar(); }
+  });
+  $('lista').addEventListener('keydown', e => { if (e.key === 'Enter' && e.target.classList.contains('nota')) addNota(+e.target.dataset.i); });
+  $('lista').addEventListener('change', e => {
+    if (!e.target.classList.contains('entrega')) return;
+    coches[+e.target.dataset.i].entrega = new Date(e.target.value + 'T12:00').toISOString(); guardar(); toast('Fecha de entrega actualizada');
+  });
+  $('filtro').oninput = pintar;
+  $('resetBtn').onclick = () => { if (confirm('¿Volver a los datos de ejemplo?')) { reiniciarDemo(); coches = cargarCoches(); pintar(); } };
+
+  /* ---- nuevo coche ---- */
+  const modal = $('modal');
+  $('nuevoBtn').onclick = () => { $('nuevoForm').reset(); $('nuevoForm').entrega.value = new Date(Date.now() + 2 * 864e5).toISOString().slice(0, 10); modal.classList.remove('hidden'); };
+  $('cancelar').onclick = () => modal.classList.add('hidden');
+  $('nuevoForm').onsubmit = e => {
+    e.preventDefault();
+    const d = Object.fromEntries(new FormData(e.target));
+    const codigo = String(Math.floor(1000 + Math.random() * 9000));
+    coches.unshift({
+      matricula: d.matricula.toUpperCase().trim(), codigo, cliente: d.cliente.trim(), telefono: d.telefono.trim(),
+      coche: d.coche.trim(), trabajo: d.trabajo.trim(), etapa: 'recibido', entrega: new Date(d.entrega + 'T12:00').toISOString(),
+      historial: [{ fecha: new Date().toISOString(), etapa: 'recibido', nota: 'Recibido en el taller.' }],
+    });
+    modal.classList.add('hidden'); guardar(); toast(`Alta hecha · código del cliente: ${codigo}`);
+  };
+
+  // si otra pestaña cambia los datos, refrescar
+  addEventListener('storage', e => { if (e.key === ESTADO_KEY && !$('app').classList.contains('hidden')) { coches = cargarCoches(); pintar(); } });
+</script>
+</body>
+</html>

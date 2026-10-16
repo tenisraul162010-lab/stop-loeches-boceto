@@ -1,0 +1,178 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Estado de tu coche | Reparaciones Automovilísticas Stop</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com/3.4.17"></script>
+<script>
+tailwind.config = { theme: { extend: {
+  colors: { ink:'#0a0a0c', coal:'#131317', steel:'#1c1c22', line:'#2b2b33', mist:'#a09fab', chalk:'#f3f2f5', brand:'#e3262f', brandDark:'#c41b24', ok:'#22c55e' },
+  fontFamily: { display:['"Chakra Petch"','sans-serif'], sans:['Inter','sans-serif'] }
+} } }
+</script>
+<style>
+  body{background:#0a0a0c}
+  .octagon{clip-path:polygon(30% 0,70% 0,100% 30%,100% 70%,70% 100%,30% 100%,0 70%,0 30%)}
+  .input{width:100%;background:#131317;border:1px solid #2b2b33;border-radius:12px;padding:.9rem 1rem;color:#f3f2f5;outline:none;transition:border-color .2s}
+  .input:focus{border-color:#e3262f}
+  .input::placeholder{color:#64636e}
+  @keyframes pulse-ring{0%{box-shadow:0 0 0 0 rgba(227,38,47,.6)}100%{box-shadow:0 0 0 14px rgba(227,38,47,0)}}
+  .now{animation:pulse-ring 1.6s ease-out infinite}
+</style>
+</head>
+<body class="font-sans text-chalk antialiased min-h-screen flex flex-col">
+
+<div class="bg-brand text-white text-center text-xs font-semibold tracking-wide py-2 px-4">BOCETO · Modo demostración</div>
+
+<header class="border-b border-line">
+  <div class="max-w-3xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
+    <a href="index.html" class="flex items-center gap-3">
+      <span class="octagon w-10 h-10 bg-brand grid place-items-center font-display font-bold text-[11px] tracking-wider text-white">STOP</span>
+      <span class="leading-none">
+        <span class="block font-display font-bold text-lg tracking-wider">STOP</span>
+        <span class="block text-[10px] tracking-[0.25em] text-mist uppercase mt-1">Reparaciones Automovilísticas</span>
+      </span>
+    </a>
+    <a href="tel:+34910616755" class="text-sm text-mist hover:text-chalk">91 061 67 55</a>
+  </div>
+</header>
+
+<main class="flex-1 max-w-3xl w-full mx-auto px-4 sm:px-6 py-12">
+  <p class="text-xs tracking-[0.3em] uppercase text-brand font-semibold">Seguimiento</p>
+  <h1 class="font-display font-bold mt-3 text-4xl sm:text-5xl">¿Cómo va tu coche?</h1>
+  <p class="mt-3 text-mist">Introduce la matrícula y el código que te dimos al dejar el coche.</p>
+
+  <form id="buscar" class="mt-8 grid sm:grid-cols-[1fr_160px_auto] gap-3">
+    <input id="mat" class="input font-display tracking-widest uppercase" placeholder="Matrícula (1234 KLM)" autocomplete="off" required>
+    <input id="cod" class="input font-display tracking-widest" placeholder="Código" inputmode="numeric" autocomplete="off" required>
+    <button class="bg-brand hover:bg-brandDark text-white font-semibold px-7 py-3 rounded-xl transition">Consultar</button>
+  </form>
+  <p id="error" class="hidden mt-3 text-sm text-brand">No encontramos ese coche. Revisa la matrícula y el código o llámanos.</p>
+
+  <div class="mt-4 rounded-2xl border border-dashed border-line p-4 text-sm text-mist">
+    <b class="text-chalk">Para probar:</b>
+    <button class="demo underline hover:text-chalk" data-m="1234 KLM" data-c="4821">1234 KLM · 4821</button>,
+    <button class="demo underline hover:text-chalk" data-m="5678 HJT" data-c="1093">5678 HJT · 1093</button> o
+    <button class="demo underline hover:text-chalk" data-m="9012 MNB" data-c="7755">9012 MNB · 7755</button>.
+    Cambia el estado desde el <a href="taller.html" target="_blank" class="text-brand underline">panel del taller ↗</a> y verás cómo se actualiza aquí.
+  </div>
+
+  <!-- Resultado -->
+  <section id="res" class="hidden mt-10">
+    <div class="bg-coal border border-line rounded-3xl p-6 sm:p-8">
+      <div class="flex flex-wrap items-start justify-between gap-4">
+        <div>
+          <p class="text-sm text-mist">Hola, <span id="rCliente"></span> 👋</p>
+          <h2 id="rCoche" class="font-display text-3xl font-bold mt-1"></h2>
+          <p id="rTrabajo" class="text-mist mt-1"></p>
+        </div>
+        <span id="rMat" class="font-display tracking-[0.2em] bg-chalk text-ink px-4 py-2 rounded-lg border-l-8 border-[#1d4ed8] text-lg"></span>
+      </div>
+
+      <div id="rBanner" class="mt-6 rounded-2xl p-5 flex items-center gap-4"></div>
+
+      <!-- Barra de progreso -->
+      <div class="mt-8">
+        <div class="flex justify-between text-xs text-mist mb-2"><span>Progreso</span><span id="rPct"></span></div>
+        <div class="h-2 bg-steel rounded-full overflow-hidden"><div id="rBar" class="h-full bg-brand rounded-full transition-all duration-700" style="width:0"></div></div>
+      </div>
+
+      <!-- Etapas -->
+      <ol id="rEtapas" class="mt-8 space-y-0"></ol>
+
+      <div class="mt-8 grid sm:grid-cols-2 gap-3">
+        <div class="rounded-2xl bg-ink border border-line p-4">
+          <p class="text-xs text-mist uppercase tracking-wider">Entrega prevista</p>
+          <p id="rEntrega" class="font-display text-xl mt-1 capitalize"></p>
+        </div>
+        <a href="tel:+34910616755" class="rounded-2xl bg-ink border border-line p-4 hover:border-brand transition">
+          <p class="text-xs text-mist uppercase tracking-wider">¿Dudas?</p>
+          <p class="font-display text-xl mt-1">Llamar · 91 061 67 55</p>
+        </a>
+      </div>
+    </div>
+
+    <h3 class="font-display text-2xl font-semibold mt-12">Notas del taller</h3>
+    <ul id="rNotas" class="mt-5 space-y-3"></ul>
+    <p class="mt-6 text-xs text-mist">Esta página se actualiza sola cuando el taller cambia el estado.</p>
+  </section>
+</main>
+
+<footer class="border-t border-line py-6 text-center text-xs text-mist px-4">Reparaciones Automovilísticas Stop · Calle Lube, 1 · 28890 Loeches (Madrid)</footer>
+
+<script src="estado.js"></script>
+<script>
+  let actual = null; // matrícula normalizada que se está viendo
+
+  function buscar(m, c) {
+    const coche = cargarCoches().find(x => normMatricula(x.matricula) === normMatricula(m) && String(x.codigo) === String(c).trim());
+    document.getElementById('error').classList.toggle('hidden', !!coche);
+    if (!coche) { document.getElementById('res').classList.add('hidden'); actual = null; return; }
+    actual = { m: normMatricula(m), c: String(c).trim() };
+    try { sessionStorage.setItem('stop-ultima', JSON.stringify(actual)); } catch (e) {}
+    pintar(coche);
+  }
+
+  function pintar(coche) {
+    const idx = etapaIndex(coche.etapa), listo = coche.etapa === 'listo';
+    const $ = id => document.getElementById(id);
+    $('res').classList.remove('hidden');
+    $('rCliente').textContent = coche.cliente;
+    $('rCoche').textContent = coche.coche;
+    $('rTrabajo').textContent = coche.trabajo;
+    $('rMat').textContent = coche.matricula;
+    $('rEntrega').textContent = fmtFecha(coche.entrega, false);
+    const pct = Math.round(idx / (ETAPAS.length - 1) * 100);
+    $('rPct').textContent = pct + ' %';
+    $('rBar').style.width = pct + '%';
+    $('rBar').classList.toggle('bg-ok', listo); $('rBar').classList.toggle('bg-brand', !listo);
+
+    const b = $('rBanner');
+    b.className = 'mt-6 rounded-2xl p-5 flex items-center gap-4 ' + (listo ? 'bg-ok/10 border border-ok/40' : 'bg-brand/10 border border-brand/40');
+    b.innerHTML = `<span class="w-12 h-12 shrink-0 rounded-full grid place-items-center text-xl ${listo ? 'bg-ok text-ink' : 'bg-brand text-white'}">${listo ? '✓' : '🔧'}</span>
+      <div><p class="text-xs uppercase tracking-wider text-mist">Estado actual</p>
+      <p class="font-display text-2xl font-bold">${etapaNombre(coche.etapa)}</p>
+      <p class="text-sm text-mist">${ETAPAS[idx].desc}</p></div>`;
+
+    $('rEtapas').innerHTML = ETAPAS.map((e, i) => {
+      const hecho = i < idx || (listo && i === idx), ahora = i === idx && !listo;
+      const dot = hecho ? 'bg-ok text-ink' : ahora ? 'bg-brand text-white now' : 'bg-steel text-mist';
+      const cuando = coche.historial.filter(h => h.etapa === e.id).map(h => h.fecha)[0];
+      return `<li class="flex gap-4">
+        <div class="flex flex-col items-center">
+          <span class="w-8 h-8 rounded-full grid place-items-center text-xs font-bold ${dot}">${hecho ? '✓' : i + 1}</span>
+          ${i < ETAPAS.length - 1 ? `<span class="w-px flex-1 min-h-[22px] ${i < idx ? 'bg-ok/60' : 'bg-line'}"></span>` : ''}
+        </div>
+        <div class="pb-5">
+          <p class="font-medium ${i > idx ? 'text-mist' : ''}">${e.nombre}${ahora ? ' <span class="ml-2 text-[10px] uppercase tracking-wider bg-brand text-white px-2 py-0.5 rounded-full align-middle">Ahora</span>' : ''}</p>
+          ${cuando ? `<p class="text-xs text-mist mt-0.5">${fmtFecha(cuando)}</p>` : ''}
+        </div>
+      </li>`;
+    }).join('');
+
+    $('rNotas').innerHTML = [...coche.historial].reverse().map(h => `
+      <li class="bg-coal border border-line rounded-2xl p-4">
+        <div class="flex flex-wrap justify-between gap-2 text-xs text-mist"><span class="text-brand font-semibold uppercase tracking-wider">${etapaNombre(h.etapa)}</span><span>${fmtFecha(h.fecha)}</span></div>
+        <p class="mt-2"></p>
+      </li>`).join('');
+    // las notas las escribe el taller: se insertan como texto, no como HTML
+    [...$('rNotas').querySelectorAll('li p:last-child')].forEach((p, i) => p.textContent = [...coche.historial].reverse()[i].nota);
+  }
+
+  document.getElementById('buscar').onsubmit = e => { e.preventDefault(); buscar(mat.value, cod.value); };
+  document.querySelectorAll('.demo').forEach(b => b.onclick = () => { mat.value = b.dataset.m; cod.value = b.dataset.c; buscar(b.dataset.m, b.dataset.c); });
+
+  // se actualiza en vivo cuando el panel del taller guarda cambios (otra pestaña)
+  addEventListener('storage', e => { if (e.key === ESTADO_KEY && actual) buscar(actual.m, actual.c); });
+
+  // enlace directo: seguimiento.html?m=1234KLM&c=4821  (para mandarlo por WhatsApp)
+  const q = new URLSearchParams(location.search);
+  let ini = q.get('m') ? { m: q.get('m'), c: q.get('c') } : null;
+  if (!ini) { try { ini = JSON.parse(sessionStorage.getItem('stop-ultima')); } catch (e) {} }
+  if (ini) { mat.value = ini.m; cod.value = ini.c; buscar(ini.m, ini.c); }
+</script>
+</body>
+</html>

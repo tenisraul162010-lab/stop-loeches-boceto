@@ -46,15 +46,16 @@ tailwind.config = {
         <span class="block text-[10px] tracking-[0.25em] text-mist uppercase mt-1">Reparaciones Automovilísticas</span>
       </span>
     </a>
-    <nav class="hidden lg:flex items-center gap-7 text-sm text-mist">
+    <nav class="hidden lg:flex items-center gap-6 text-sm text-mist whitespace-nowrap">
       <a href="#servicios" class="hover:text-chalk">Servicios</a>
       <a href="#seguros" class="hover:text-chalk">Aseguradoras</a>
+      <a href="seguimiento.html" class="hover:text-chalk">Estado de tu coche</a>
       <a href="#configurador" class="hover:text-chalk">Configurador 3D</a>
       <a href="#contacto" class="hover:text-chalk">Contacto</a>
-      <a href="#donde" class="hover:text-chalk">Dónde estamos</a>
+      <a href="#donde" class="hover:text-chalk hidden xl:inline">Dónde estamos</a>
     </nav>
     <div class="flex items-center gap-3">
-      <a href="tel:+34910616755" class="hidden sm:inline-flex items-center gap-2 bg-brand hover:bg-brandDark text-white font-semibold text-sm px-5 py-2.5 rounded-full transition">
+      <a href="tel:+34910616755" class="hidden sm:inline-flex items-center gap-2 whitespace-nowrap bg-brand hover:bg-brandDark text-white font-semibold text-sm px-5 py-2.5 rounded-full transition">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M6.6 10.8a15.1 15.1 0 0 0 6.6 6.6l2.2-2.2a1 1 0 0 1 1-.25 11.4 11.4 0 0 0 3.6.57 1 1 0 0 1 1 1V20a1 1 0 0 1-1 1A17 17 0 0 1 3 4a1 1 0 0 1 1-1h3.5a1 1 0 0 1 1 1c0 1.25.2 2.45.57 3.57a1 1 0 0 1-.25 1z"/></svg>
         91 061 67 55
       </a>
@@ -66,6 +67,7 @@ tailwind.config = {
   <div id="menu" class="hidden lg:hidden border-t border-line bg-coal">
     <a href="#servicios" class="block px-6 py-3 hover:bg-steel">Servicios</a>
     <a href="#seguros" class="block px-6 py-3 hover:bg-steel">Aseguradoras</a>
+    <a href="seguimiento.html" class="block px-6 py-3 hover:bg-steel">Estado de tu coche</a>
     <a href="#configurador" class="block px-6 py-3 hover:bg-steel">Configurador 3D</a>
     <a href="#donde" class="block px-6 py-3 hover:bg-steel">Dónde estamos</a>
     <a href="#contacto" class="block px-6 py-3 text-brand font-semibold hover:bg-steel">Pedir presupuesto</a>
@@ -187,6 +189,36 @@ tailwind.config = {
       <div class="rounded-2xl border border-line bg-ink/60 py-5 text-center font-display text-lg tracking-wide">Allianz</div>
       <div class="rounded-2xl border border-line bg-ink/60 py-5 text-center font-display text-lg tracking-wide">Fénix</div>
     </div>
+  </div>
+</section>
+
+<!-- SEGUIMIENTO -->
+<section id="estado" class="px-4 sm:px-6 pb-24">
+  <div class="max-w-6xl mx-auto grid lg:grid-cols-2 gap-10 items-center">
+    <div class="reveal">
+      <p class="text-xs tracking-[0.3em] uppercase text-brand font-semibold">Nuevo · Seguimiento online</p>
+      <h2 class="font-display font-bold mt-3 text-4xl md:text-5xl">Sigue la reparación de tu coche desde el móvil</h2>
+      <p class="mt-4 text-mist leading-relaxed">Al dejar el coche te damos un código. Con tu matrícula y ese código ves en todo momento en qué punto está: diagnóstico, presupuesto, reparación, pintura… y te avisamos cuando esté listo para recoger.</p>
+      <div class="mt-8 flex flex-wrap gap-3">
+        <a href="seguimiento.html" class="bg-brand hover:bg-brandDark text-white font-semibold px-7 py-3.5 rounded-full transition">Consultar mi coche</a>
+        <a href="taller.html" class="border border-chalk/30 hover:border-chalk px-7 py-3.5 rounded-full transition">Panel del taller (demo)</a>
+      </div>
+    </div>
+    <a href="seguimiento.html?m=1234KLM&c=4821" class="reveal block bg-coal border border-line rounded-3xl p-6 sm:p-8 hover:border-brand/60 transition">
+      <div class="flex items-center justify-between gap-3">
+        <div><p class="text-sm text-mist">Seat León 1.5 TSI</p><p class="font-display text-2xl font-bold mt-1">Pintura</p></div>
+        <span class="font-display tracking-[0.2em] bg-chalk text-ink px-3 py-1.5 rounded-md border-l-[6px] border-[#1d4ed8]">1234 KLM</span>
+      </div>
+      <div class="mt-6 h-2 bg-steel rounded-full overflow-hidden"><div class="h-full w-2/3 bg-brand rounded-full"></div></div>
+      <ol class="mt-6 space-y-3 text-sm">
+        <li class="flex items-center gap-3"><span class="w-6 h-6 rounded-full bg-[#22c55e] text-ink grid place-items-center text-xs font-bold">✓</span>Recibido en taller</li>
+        <li class="flex items-center gap-3"><span class="w-6 h-6 rounded-full bg-[#22c55e] text-ink grid place-items-center text-xs font-bold">✓</span>Diagnóstico y peritación</li>
+        <li class="flex items-center gap-3"><span class="w-6 h-6 rounded-full bg-[#22c55e] text-ink grid place-items-center text-xs font-bold">✓</span>En reparación</li>
+        <li class="flex items-center gap-3"><span class="w-6 h-6 rounded-full bg-brand text-white grid place-items-center text-xs font-bold">5</span><b>Pintura</b><span class="text-[10px] uppercase tracking-wider bg-brand text-white px-2 py-0.5 rounded-full">Ahora</span></li>
+        <li class="flex items-center gap-3 text-mist"><span class="w-6 h-6 rounded-full bg-steel grid place-items-center text-xs">7</span>Listo para recoger</li>
+      </ol>
+      <p class="mt-6 text-sm text-brand font-semibold">Ver ejemplo →</p>
+    </a>
   </div>
 </section>
 
@@ -324,7 +356,7 @@ tailwind.config = {
       <p class="mt-2">Calle Lube, 1 · 28890 Loeches (Madrid) · 91 061 67 55</p>
     </div>
     <div class="md:text-right">
-      <p>Boceto de diseño · Aviso legal · Privacidad · Cookies</p>
+      <p>Boceto de diseño · Aviso legal · Privacidad · Cookies · <a href="taller.html" class="hover:text-chalk underline">Acceso taller</a></p>
       <p class="mt-2 text-xs">Fotos: Unsplash · Modelo 3D "Porsche 911 GT3" por Outlaw Games (CC BY-NC 4.0)</p>
     </div>
   </div>
