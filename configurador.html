@@ -1,0 +1,339 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>911 GT3 Configurador</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Rajdhani:wght@400;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#03050a; --panel:rgba(10,18,32,.55); --line:rgba(0,240,255,.25);
+    --cyan:#00f0ff; --pink:#ff2bd6; --text:#d9f6ff; --muted:#7fa3b5;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{height:100%;background:var(--bg);color:var(--text);font-family:Rajdhani,sans-serif;overflow:hidden}
+  canvas{display:block}
+  #hud-top{position:fixed;top:0;left:0;right:0;display:flex;justify-content:space-between;align-items:center;padding:18px 28px;pointer-events:none;z-index:5}
+  .brand{font-family:Orbitron;font-weight:900;letter-spacing:.35em;font-size:22px;text-shadow:0 0 18px var(--cyan)}
+  .brand span{color:var(--cyan)}
+  .stats{display:flex;gap:26px;font-family:Orbitron;font-size:11px;letter-spacing:.15em;color:var(--muted)}
+  .stats b{display:block;color:var(--text);font-size:18px;margin-top:2px}
+  #panel{position:fixed;right:20px;top:50%;transform:translateY(-50%);width:310px;max-height:88vh;overflow:auto;
+    background:var(--panel);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);
+    border:1px solid var(--line);border-radius:18px;padding:20px;z-index:6;
+    box-shadow:0 0 40px rgba(0,240,255,.12), inset 0 0 30px rgba(0,240,255,.05)}
+  #panel::-webkit-scrollbar{width:4px}#panel::-webkit-scrollbar-thumb{background:var(--line)}
+  h3{font-family:Orbitron;font-size:11px;letter-spacing:.25em;color:var(--cyan);margin:18px 0 10px;display:flex;justify-content:space-between}
+  h3:first-child{margin-top:0}
+  h3 em{font-style:normal;color:var(--text)}
+  .swatches{display:grid;grid-template-columns:repeat(6,1fr);gap:8px}
+  .sw{aspect-ratio:1;border-radius:50%;border:2px solid transparent;cursor:pointer;transition:.2s;box-shadow:inset 0 -4px 8px rgba(0,0,0,.4)}
+  .sw:hover{transform:scale(1.12)}
+  .sw.on{border-color:var(--cyan);box-shadow:0 0 14px var(--cyan)}
+  .row{display:flex;gap:8px;align-items:center;margin-top:10px}
+  input[type=color]{width:40px;height:30px;border:1px solid var(--line);border-radius:8px;background:none;cursor:pointer;padding:2px}
+  .seg{display:flex;border:1px solid var(--line);border-radius:10px;overflow:hidden}
+  .seg button{flex:1;background:none;border:0;color:var(--muted);padding:8px 4px;font-family:Orbitron;font-size:10px;letter-spacing:.1em;cursor:pointer}
+  .seg button.on{background:rgba(0,240,255,.15);color:var(--cyan)}
+  input[type=range]{-webkit-appearance:none;width:100%;height:4px;border-radius:4px;background:linear-gradient(90deg,var(--cyan),var(--pink));outline:none}
+  input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:18px;height:18px;border-radius:50%;background:#fff;box-shadow:0 0 12px var(--cyan);cursor:pointer}
+  input[type=range]::-moz-range-thumb{width:18px;height:18px;border-radius:50%;background:#fff;border:0;box-shadow:0 0 12px var(--cyan)}
+  .labels{display:flex;justify-content:space-between;font-size:11px;color:var(--muted);margin-top:6px}
+  .btns{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+  .btn{background:rgba(0,240,255,.06);border:1px solid var(--line);color:var(--text);padding:10px;border-radius:10px;font-family:Orbitron;font-size:10px;letter-spacing:.12em;cursor:pointer;transition:.2s}
+  .btn:hover,.btn.on{background:rgba(0,240,255,.18);color:var(--cyan);box-shadow:0 0 14px rgba(0,240,255,.3)}
+  .btn.full{grid-column:span 2}
+  .note{font-size:12px;color:var(--muted);margin-top:8px;line-height:1.3}
+  #loader{position:fixed;inset:0;display:grid;place-items:center;background:var(--bg);z-index:20;font-family:Orbitron;letter-spacing:.4em;color:var(--cyan);transition:opacity .8s;text-align:center}
+  #loader small{display:block;margin-top:14px;font-size:11px;color:var(--muted);letter-spacing:.3em}
+  #hint{position:fixed;left:28px;bottom:22px;font-family:Orbitron;font-size:10px;letter-spacing:.2em;color:var(--muted);z-index:5}
+  @media (max-width:760px){
+    #panel{top:auto;bottom:12px;right:12px;left:12px;width:auto;transform:none;max-height:44vh;padding:16px}
+    .stats{display:none}#hint{display:none}
+    #hud-top{padding:14px 16px}.brand{font-size:16px}
+  }
+</style>
+</head>
+<body>
+<div id="loader"><div>CARGANDO VEHÍCULO<small id="pct">0%</small></div></div>
+
+<div id="hud-top">
+  <div class="brand">911 <span>GT3</span></div>
+  <div class="stats">
+    <div>POTENCIA<b>510 CV</b></div>
+    <div>0-100<b>3.4 s</b></div>
+    <div>V-MAX<b>318 km/h</b></div>
+    <div>ALTURA<b id="stat-h">0 mm</b></div>
+  </div>
+</div>
+
+<div id="panel">
+  <h3>PINTURA</h3>
+  <div class="swatches" id="paints"></div>
+  <div class="row">
+    <input type="color" id="customPaint" value="#7cff3a" title="Color personalizado">
+    <div class="seg" style="flex:1" id="finish">
+      <button data-f="gloss" class="on">BRILLO</button>
+      <button data-f="metal">METAL</button>
+      <button data-f="matte">MATE</button>
+    </div>
+  </div>
+
+  <h3>TINTADO VIDRIOS <em id="tintVal">50%</em></h3>
+  <input type="range" id="tint" min="0" max="100" value="50">
+  <div class="labels"><span>Transparente</span><span>Oscuro total</span></div>
+
+  <h3>SUSPENSIÓN <em id="suspVal">0 mm</em></h3>
+  <input type="range" id="susp" min="-60" max="80" value="0">
+  <div class="labels"><span>▼ Pista (baja)</span><span>Lift ▲</span></div>
+  <div class="btns" style="margin-top:10px">
+    <button class="btn" id="lowBtn">MODO PISTA</button>
+    <button class="btn" id="liftBtn">FRONT LIFT</button>
+  </div>
+
+  <h3>LLANTAS <em>tono</em></h3>
+  <div class="swatches" id="rims"></div>
+  <h3>PINZAS DE FRENO</h3>
+  <div class="swatches" id="calipers"></div>
+
+  <h3>SISTEMA</h3>
+  <div class="btns">
+    <button class="btn on" id="rotBtn">AUTO-GIRO</button>
+    <button class="btn on" id="lightBtn">NEÓN</button>
+    <button class="btn full" id="glbBtn">CARGAR MODELO .GLB</button>
+  </div>
+  <input type="file" id="glbFile" accept=".glb,.gltf" hidden>
+  <p class="note" id="modelNote">Cargando modelo…</p>
+</div>
+
+<div id="hint">ARRASTRA PARA GIRAR · RUEDA PARA ZOOM</div>
+
+<script type="importmap">
+{"imports":{
+  "three":"https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
+  "three/addons/":"https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
+}}
+</script>
+<script type="module">
+import * as THREE from 'three';
+import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
+import { EffectComposer } from 'three/addons/postprocessing/EffectComposer.js';
+import { RenderPass } from 'three/addons/postprocessing/RenderPass.js';
+import { UnrealBloomPass } from 'three/addons/postprocessing/UnrealBloomPass.js';
+import { OutputPass } from 'three/addons/postprocessing/OutputPass.js';
+import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+import { DRACOLoader } from 'three/addons/loaders/DRACOLoader.js';
+
+const CDN = 'https://cdn.jsdelivr.net/npm/three@0.160.0/examples/';
+const $ = id => document.getElementById(id);
+
+/* ---------- escena ---------- */
+const renderer = new THREE.WebGLRenderer({ antialias:true });
+renderer.setPixelRatio(Math.min(devicePixelRatio,2));
+renderer.setSize(innerWidth, innerHeight);
+renderer.toneMapping = THREE.ACESFilmicToneMapping;
+renderer.toneMappingExposure = 0.95;
+renderer.shadowMap.enabled = true;
+renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+document.body.appendChild(renderer.domElement);
+
+const scene = new THREE.Scene();
+scene.background = new THREE.Color(0x03050a);
+scene.fog = new THREE.FogExp2(0x03050a, 0.045);
+const pmrem = new THREE.PMREMGenerator(renderer);
+scene.environment = pmrem.fromScene(new RoomEnvironment(), 0.04).texture;
+
+const camera = new THREE.PerspectiveCamera(38, innerWidth/innerHeight, 0.1, 200);
+camera.position.set(6.2, 2.2, 6.5);
+if (window.self !== window.top) { camera.position.set(4.4, 1.6, 4.6); document.querySelector(".stats").style.display = "none"; }   // incrustado en la web
+const controls = new OrbitControls(camera, renderer.domElement);
+controls.target.set(0, 0.55, 0);
+controls.enableDamping = true;
+controls.minDistance = 3.5; controls.maxDistance = 16;
+controls.maxPolarAngle = Math.PI*0.49;
+controls.autoRotate = true; controls.autoRotateSpeed = 0.8;
+
+scene.add(new THREE.HemisphereLight(0x88ccff, 0x080010, 0.5));
+const key = new THREE.DirectionalLight(0xffffff, 2.4);
+key.position.set(4, 8, 3); key.castShadow = true;
+key.shadow.mapSize.set(2048,2048); key.shadow.bias = -0.0005;
+Object.assign(key.shadow.camera,{left:-5,right:5,top:5,bottom:-5});
+scene.add(key);
+const rimA = new THREE.PointLight(0x00f0ff, 30, 14); rimA.position.set(-5,2,-4); scene.add(rimA);
+const rimB = new THREE.PointLight(0xff2bd6, 30, 14); rimB.position.set(5,2,-4); scene.add(rimB);
+
+/* suelo */
+const floor = new THREE.Mesh(new THREE.CircleGeometry(30,64),
+  new THREE.MeshStandardMaterial({ color:0x05070d, metalness:0.9, roughness:0.35, envMapIntensity:0.08 }));
+floor.rotation.x = -Math.PI/2; floor.receiveShadow = true; scene.add(floor);
+const grid = new THREE.GridHelper(60, 120, 0x00f0ff, 0x0a2a3a);
+grid.material.transparent = true; grid.material.opacity = 0.3; grid.position.y = 0.002; scene.add(grid);
+
+const rings = [];
+[3.6, 4.4, 5.6].forEach((r,i)=>{
+  const ring = new THREE.Mesh(new THREE.TorusGeometry(r, 0.012 + i*0.004, 8, 160),
+    new THREE.MeshBasicMaterial({ color: i===1 ? 0xff2bd6 : 0x00f0ff }));
+  ring.rotation.x = -Math.PI/2; ring.position.y = 0.01; scene.add(ring); rings.push(ring);
+});
+const pillars = [];
+for(let i=0;i<10;i++){
+  const a = i/10*Math.PI*2;
+  const p = new THREE.Mesh(new THREE.BoxGeometry(0.05,6,0.05),
+    new THREE.MeshBasicMaterial({ color: i%2 ? 0x00f0ff : 0xff2bd6 }));
+  p.position.set(Math.cos(a)*12, 3, Math.sin(a)*12); scene.add(p); pillars.push(p);
+}
+const pGeo = new THREE.BufferGeometry(); const pPos = [];
+for(let i=0;i<600;i++) pPos.push((Math.random()-.5)*40, Math.random()*12, (Math.random()-.5)*40);
+pGeo.setAttribute('position', new THREE.Float32BufferAttribute(pPos,3));
+const particles = new THREE.Points(pGeo, new THREE.PointsMaterial({ color:0x66eaff, size:0.03, transparent:true, opacity:0.7 }));
+scene.add(particles);
+const underGlow = new THREE.Mesh(new THREE.CircleGeometry(2.6,64),
+  new THREE.MeshBasicMaterial({ color:0x00f0ff, transparent:true, opacity:0.15, depthWrite:false }));
+underGlow.rotation.x = -Math.PI/2; underGlow.position.y = 0.012; scene.add(underGlow);
+
+/* ---------- materiales configurables ---------- */
+const paint = new THREE.MeshPhysicalMaterial({ color:0x7cff3a, metalness:0.6, roughness:0.3, clearcoat:1, clearcoatRoughness:0.03 });
+const glass = new THREE.MeshPhysicalMaterial({ color:0x0a0f14, metalness:0.1, roughness:0.02, transparent:true, opacity:0.55,
+  side:THREE.DoubleSide, depthWrite:false, clearcoat:1, envMapIntensity:0.5 });
+
+/* ---------- carga del coche ---------- */
+const draco = new DRACOLoader().setDecoderPath(CDN + 'jsm/libs/draco/gltf/');
+const loader = new GLTFLoader().setDRACOLoader(draco);
+
+let car = null, bodyPivot = null, wheelNodes = [];
+const FRONT = 1;   // lado del morro en Z (para el front lift)
+const rimMats = new Set(), caliperMats = new Set();
+const isWheel = n => /wheel|tire|tyre|rueda|neumat|calli|caliper|brake|disc/i.test(n) && !/steer|volante/i.test(n);
+
+function setupCar(model){
+  if(car){ scene.remove(car); scene.remove(bodyPivot); }
+  rimMats.clear(); caliperMats.clear(); wheelNodes = [];
+  /* normalizar a ~4.5 m de largo, centrado y apoyado en el suelo */
+  car = new THREE.Group(); car.add(model);
+  let box = new THREE.Box3().setFromObject(model), size = box.getSize(new THREE.Vector3());
+  if(size.x > size.z) model.rotation.y = Math.PI/2;   // largo en Z
+  model.updateMatrixWorld(true);
+  box = new THREE.Box3().setFromObject(model); size = box.getSize(new THREE.Vector3());
+  model.scale.multiplyScalar(4.5 / Math.max(size.x, size.z));
+  model.updateMatrixWorld(true);
+  box = new THREE.Box3().setFromObject(model); const c = box.getCenter(new THREE.Vector3());
+  model.position.set(-c.x, -box.min.y, -c.z);
+  scene.add(car); car.updateMatrixWorld(true);
+
+  car.traverse(o=>{
+    if(isWheel(o.name) && !wheelNodes.some(w=> isAncestor(w,o))) wheelNodes.push(o);
+    if(!o.isMesh) return;
+    o.castShadow = o.receiveShadow = true;
+    const mn = (o.material && o.material.name || '').toLowerCase();
+    const n = mn || o.name.toLowerCase();
+    if(/glass|window|vidrio|windshield|cristal|scheibe/.test(n) && !/red|tail|light/.test(n)) { o.material = glass; o.castShadow = false; }
+    else if(/paint|coloured|carpaint|lack|carroc/.test(n) || (!mn && /body/.test(n))) o.material = paint;
+    else if(/calli|caliper/.test(n)) caliperMats.add(o.material);
+    else if(/rim|llanta|felge/.test(n)) rimMats.add(o.material);
+  });
+  /* todo lo que no es rueda va a un pivote: así sube/baja la carrocería */
+  const bodyMeshes = [];
+  car.traverse(o=>{ if(o.isMesh && !wheelNodes.some(w=> isAncestor(w,o))) bodyMeshes.push(o); });
+  bodyPivot = new THREE.Group(); scene.add(bodyPivot);
+  bodyMeshes.forEach(m=> bodyPivot.attach(m));
+}
+function isAncestor(a, o){ for(let p=o; p; p=p.parent) if(p===a) return true; return false; }
+
+function loadURL(url, label, fallback){
+  loader.load(url, gltf=>{
+    setupCar(gltf.scene);
+    if(label) $('modelNote').textContent = label;
+    rimsBlock.forEach(el=> el.style.display = rimMats.size ? '' : 'none');
+    const l = $('loader'); if(l){ l.style.opacity = 0; setTimeout(()=> l.remove(), 800); }
+  }, e=>{ if(e.total && $('pct')) $('pct').textContent = Math.round(e.loaded/e.total*100) + '%'; },
+  ()=>{ if(fallback) fallback(); else alert('No se pudo cargar el modelo'); });
+}
+/* modelo.glb junto a la página; si falta, coche de ejemplo de three.js */
+loadURL('modelo.glb', 'Modelo 3D: "Porsche 911 GT3" por Outlaw Games (CC BY-NC 4.0, vía Sketchfab)', ()=>
+  loadURL('https://cdn.jsdelivr.net/gh/mrdoob/three.js@r160/examples/models/gltf/ferrari.glb', 'Modelo de demostración'));
+
+$('glbBtn').onclick = ()=> $('glbFile').click();
+$('glbFile').onchange = e=>{
+  const f = e.target.files[0]; if(f) loadURL(URL.createObjectURL(f), 'Modelo: ' + f.name);
+};
+
+/* ---------- UI ---------- */
+const PAINTS = ['#7cff3a','#c8102e','#0b4fd6','#ff7a00','#f5f5f5','#0a0a0a','#ffcf00','#7a7f86','#2e8b57','#9b30ff','#00d4c8','#ff4fa3'];
+const RIMS = ['#ffffff','#3a3a3a','#d4af37','#7cff3a','#c8102e','#9fb4ff'];
+const CALS = ['#ffffff','#ffd400','#c8102e','#111111','#0b4fd6','#7cff3a'];
+function swatches(el, list, onPick){
+  list.forEach((c,i)=>{
+    const d = document.createElement('div'); d.className = 'sw' + (i===0?' on':''); d.style.background = c; d.title = c;
+    d.onclick = ()=>{ el.querySelectorAll('.sw').forEach(x=>x.classList.remove('on')); d.classList.add('on'); onPick(c); };
+    el.appendChild(d);
+  });
+}
+const paintTarget = new THREE.Color(PAINTS[0]);
+swatches($('paints'), PAINTS, c=>{ paintTarget.set(c); $('customPaint').value = c; });
+$('customPaint').oninput = e=>{ paintTarget.set(e.target.value); $('paints').querySelectorAll('.sw').forEach(x=>x.classList.remove('on')); };
+swatches($('rims'), RIMS, c=> rimMats.forEach(m=> m.color.set(c)));
+const rimsBlock = [$('rims'), $('rims').previousElementSibling];
+swatches($('calipers'), CALS, c=> caliperMats.forEach(m=> m.color.set(c)));
+
+$('finish').querySelectorAll('button').forEach(b=> b.onclick = ()=>{
+  $('finish').querySelectorAll('button').forEach(x=>x.classList.remove('on')); b.classList.add('on');
+  const f = b.dataset.f;
+  if(f==='gloss'){ paint.metalness=0.6; paint.roughness=0.3; paint.clearcoat=1; }
+  if(f==='metal'){ paint.metalness=1.0; paint.roughness=0.25; paint.clearcoat=1; }
+  if(f==='matte'){ paint.metalness=0.2; paint.roughness=0.8; paint.clearcoat=0; }
+});
+
+function setTint(v){
+  const t = v/100;
+  glass.opacity = 0.08 + t*0.9;
+  glass.color.setRGB(0.04*(1-t), 0.06*(1-t), 0.08*(1-t));
+  $('tintVal').textContent = v + '%';
+}
+$('tint').oninput = e=> setTint(+e.target.value); $('tint').value = 50; setTint(50);
+
+let suspTarget = 0, susp = 0, frontLift = 0, frontLiftTarget = 0;
+function setSusp(mm){
+  suspTarget = mm/1000; $('susp').value = mm;
+  const t = (mm>0?'+':'') + mm + ' mm'; $('suspVal').textContent = t; $('stat-h').textContent = t;
+}
+$('susp').oninput = e=> setSusp(+e.target.value); setSusp(0);
+$('lowBtn').onclick = ()=>{ setSusp(-60); frontLiftTarget = 0; $('liftBtn').classList.remove('on'); };
+$('liftBtn').onclick = e=>{ frontLiftTarget = frontLiftTarget ? 0 : 1; e.target.classList.toggle('on', !!frontLiftTarget); };
+$('rotBtn').onclick = e=>{ controls.autoRotate = !controls.autoRotate; e.target.classList.toggle('on', controls.autoRotate); };
+let neon = true;
+$('lightBtn').onclick = e=>{
+  neon = !neon; e.target.classList.toggle('on', neon);
+  [rimA, rimB, underGlow, grid, particles, ...rings, ...pillars].forEach(o=> o.visible = neon);
+};
+
+/* ---------- loop ---------- */
+const composer = new EffectComposer(renderer);
+composer.addPass(new RenderPass(scene, camera));
+composer.addPass(new UnrealBloomPass(new THREE.Vector2(innerWidth, innerHeight), 0.35, 0.4, 0.98));
+composer.addPass(new OutputPass());
+addEventListener('resize', ()=>{
+  camera.aspect = innerWidth/innerHeight; camera.updateProjectionMatrix();
+  renderer.setSize(innerWidth, innerHeight); composer.setSize(innerWidth, innerHeight);
+});
+
+const clock = new THREE.Clock();
+renderer.setAnimationLoop(()=>{
+  const dt = Math.min(clock.getDelta(), 0.05), t = clock.elapsedTime;
+  paint.color.lerp(paintTarget, 1 - Math.pow(0.001, dt));
+  susp += (suspTarget - susp) * (1 - Math.pow(0.02, dt));
+  frontLift += (frontLiftTarget - frontLift) * (1 - Math.pow(0.02, dt));
+  if(bodyPivot){
+    bodyPivot.position.y = susp + Math.sin(t*2)*0.002 + frontLift*0.035;
+    bodyPivot.rotation.x = -FRONT * frontLift * 0.03;
+  }
+  rings.forEach((r,i)=> r.rotation.z += dt * (i%2 ? -0.2 : 0.15));
+  underGlow.material.opacity = 0.07 + Math.sin(t*3)*0.03;
+  particles.rotation.y += dt * 0.02;
+  controls.update();
+  composer.render();
+});
+</script>
+</body>
+</html>

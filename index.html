@@ -1,0 +1,362 @@
+<!doctype html>
+<html lang="es" class="scroll-smooth">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Reparaciones Automovilísticas Stop | Taller en Loeches</title>
+<meta name="description" content="Reparaciones Automovilísticas Stop: taller de chapa y pintura, mecánica, neumáticos y electricidad en Loeches (Madrid). Concertados con las principales aseguradoras.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com/3.4.17"></script>
+<script>
+tailwind.config = {
+  theme: { extend: {
+    colors: { ink:'#0a0a0c', coal:'#131317', steel:'#1c1c22', line:'#2b2b33', mist:'#a09fab', chalk:'#f3f2f5', brand:'#e3262f', brandDark:'#c41b24' },
+    fontFamily: { display:['"Chakra Petch"','sans-serif'], sans:['Inter','sans-serif'] }
+  } }
+}
+</script>
+<style>
+  body{background:#0a0a0c}
+  .grain{background-image:radial-gradient(rgba(255,255,255,.035) 1px,transparent 1px);background-size:3px 3px}
+  .stripe{background:repeating-linear-gradient(-45deg,#e3262f 0 10px,transparent 10px 20px)}
+  .octagon{clip-path:polygon(30% 0,70% 0,100% 30%,100% 70%,70% 100%,30% 100%,0 70%,0 30%)}
+  .reveal{opacity:0;transform:translateY(24px);transition:opacity .8s ease,transform .8s ease}
+  .reveal.on{opacity:1;transform:none}
+  .input{width:100%;background:#131317;border:1px solid #2b2b33;border-radius:12px;padding:.85rem 1rem;color:#f3f2f5;outline:none;transition:border-color .2s}
+  .input:focus{border-color:#e3262f}
+  .input::placeholder{color:#64636e}
+  .marquee{animation:marquee 30s linear infinite}
+  @keyframes marquee{to{transform:translateX(-50%)}}
+  @media (prefers-reduced-motion:reduce){.marquee{animation:none}.reveal{opacity:1;transform:none}}
+</style>
+</head>
+<body class="font-sans text-chalk antialiased">
+
+<!-- Aviso boceto -->
+<div class="bg-brand text-white text-center text-xs font-semibold tracking-wide py-2 px-4">BOCETO · Propuesta de nueva web para Reparaciones Automovilísticas Stop</div>
+
+<!-- NAV -->
+<header id="nav" class="sticky top-0 z-40 transition-colors duration-300">
+  <div class="max-w-6xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
+    <a href="#inicio" class="flex items-center gap-3">
+      <span class="octagon w-10 h-10 bg-brand grid place-items-center font-display font-bold text-[11px] tracking-wider text-white">STOP</span>
+      <span class="leading-none">
+        <span class="block font-display font-bold text-lg tracking-wider">STOP</span>
+        <span class="block text-[10px] tracking-[0.25em] text-mist uppercase mt-1">Reparaciones Automovilísticas</span>
+      </span>
+    </a>
+    <nav class="hidden lg:flex items-center gap-7 text-sm text-mist">
+      <a href="#servicios" class="hover:text-chalk">Servicios</a>
+      <a href="#seguros" class="hover:text-chalk">Aseguradoras</a>
+      <a href="#configurador" class="hover:text-chalk">Configurador 3D</a>
+      <a href="#contacto" class="hover:text-chalk">Contacto</a>
+      <a href="#donde" class="hover:text-chalk">Dónde estamos</a>
+    </nav>
+    <div class="flex items-center gap-3">
+      <a href="tel:+34910616755" class="hidden sm:inline-flex items-center gap-2 bg-brand hover:bg-brandDark text-white font-semibold text-sm px-5 py-2.5 rounded-full transition">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M6.6 10.8a15.1 15.1 0 0 0 6.6 6.6l2.2-2.2a1 1 0 0 1 1-.25 11.4 11.4 0 0 0 3.6.57 1 1 0 0 1 1 1V20a1 1 0 0 1-1 1A17 17 0 0 1 3 4a1 1 0 0 1 1-1h3.5a1 1 0 0 1 1 1c0 1.25.2 2.45.57 3.57a1 1 0 0 1-.25 1z"/></svg>
+        91 061 67 55
+      </a>
+      <button id="menuBtn" class="lg:hidden w-10 h-10 grid place-items-center rounded-full border border-line" aria-label="Abrir menú">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+      </button>
+    </div>
+  </div>
+  <div id="menu" class="hidden lg:hidden border-t border-line bg-coal">
+    <a href="#servicios" class="block px-6 py-3 hover:bg-steel">Servicios</a>
+    <a href="#seguros" class="block px-6 py-3 hover:bg-steel">Aseguradoras</a>
+    <a href="#configurador" class="block px-6 py-3 hover:bg-steel">Configurador 3D</a>
+    <a href="#donde" class="block px-6 py-3 hover:bg-steel">Dónde estamos</a>
+    <a href="#contacto" class="block px-6 py-3 text-brand font-semibold hover:bg-steel">Pedir presupuesto</a>
+  </div>
+</header>
+
+<!-- HERO -->
+<section id="inicio" class="relative -mt-16 min-h-[92vh] flex items-end overflow-hidden">
+  <img src="https://images.unsplash.com/photo-1635691035955-2763da0d6f19?w=2000&q=75&auto=format&fit=crop" alt="Coche preparado en la cabina de pintura" class="absolute inset-0 w-full h-full object-cover object-[50%_45%]">
+  <div class="absolute inset-0 bg-gradient-to-t from-ink via-ink/40 to-ink/30"></div>
+  <div class="absolute inset-0 bg-gradient-to-r from-ink via-ink/70 to-transparent"></div>
+  <div class="absolute inset-0 bg-ink/45 sm:hidden"></div>
+  <div class="relative max-w-6xl mx-auto px-4 sm:px-6 pb-16 pt-40 w-full">
+    <p class="inline-flex items-center gap-2 text-xs tracking-[0.3em] uppercase text-brand font-semibold">
+      <span class="w-8 h-px bg-brand"></span> Loeches · Madrid
+    </p>
+    <h1 class="font-display font-bold mt-5 text-5xl sm:text-6xl md:text-7xl leading-[0.95] max-w-3xl">
+      Especialistas en <span class="text-brand">chapa y pintura</span>
+    </h1>
+    <p class="mt-6 text-lg text-mist max-w-xl leading-relaxed">
+      Reparamos todo tipo de daños por accidentes, colisiones o golpes, con bancada para grandes deformaciones. Además, mecánica, neumáticos y electricidad en un mismo taller.
+    </p>
+    <div class="mt-8 flex flex-wrap gap-3">
+      <a href="#contacto" class="bg-brand hover:bg-brandDark text-white font-semibold px-7 py-3.5 rounded-full transition">Pedir presupuesto</a>
+      <a href="tel:+34910616755" class="border border-chalk/30 hover:border-chalk px-7 py-3.5 rounded-full transition">Llamar · 91 061 67 55</a>
+    </div>
+    <ul class="mt-14 grid sm:grid-cols-3 max-w-2xl border-t border-line pt-6 gap-4 text-sm">
+      <li class="flex items-center gap-3"><span class="w-8 h-8 rounded-full bg-brand/15 text-brand grid place-items-center">✓</span>Recursos de vanguardia</li>
+      <li class="flex items-center gap-3"><span class="w-8 h-8 rounded-full bg-brand/15 text-brand grid place-items-center">✓</span>Servicio rápido en pequeñas reparaciones</li>
+      <li class="flex items-center gap-3"><span class="w-8 h-8 rounded-full bg-brand/15 text-brand grid place-items-center">✓</span>Concertados con aseguradoras</li>
+    </ul>
+  </div>
+</section>
+
+<!-- CINTA -->
+<div class="border-y border-line bg-coal overflow-hidden py-5">
+  <div class="marquee flex w-max gap-14 font-display text-xl tracking-[0.25em] text-mist/70 uppercase whitespace-nowrap">
+    <span>Chapa</span><span class="text-brand">/</span><span>Pintura</span><span class="text-brand">/</span><span>Mecánica</span><span class="text-brand">/</span><span>Neumáticos</span><span class="text-brand">/</span><span>Electricidad</span><span class="text-brand">/</span><span>Pre-ITV</span><span class="text-brand">/</span><span>Aire acondicionado</span><span class="text-brand">/</span><span>Diagnosis</span><span class="text-brand">/</span>
+    <span>Chapa</span><span class="text-brand">/</span><span>Pintura</span><span class="text-brand">/</span><span>Mecánica</span><span class="text-brand">/</span><span>Neumáticos</span><span class="text-brand">/</span><span>Electricidad</span><span class="text-brand">/</span><span>Pre-ITV</span><span class="text-brand">/</span><span>Aire acondicionado</span><span class="text-brand">/</span><span>Diagnosis</span><span class="text-brand">/</span>
+  </div>
+</div>
+
+<!-- SERVICIOS -->
+<section id="servicios" class="py-24 px-4 sm:px-6 grain">
+  <div class="max-w-6xl mx-auto">
+    <div class="reveal flex flex-col md:flex-row md:items-end justify-between gap-6">
+      <div>
+        <p class="text-xs tracking-[0.3em] uppercase text-brand font-semibold">Servicios</p>
+        <h2 class="font-display font-bold mt-3 text-4xl md:text-5xl max-w-xl">Todo lo que tu coche necesita en Loeches</h2>
+      </div>
+      <p class="text-mist max-w-sm">Equipo de especialistas cualificados y maquinaria de última generación, tanto para el diagnóstico como para la reparación.</p>
+    </div>
+
+    <div class="mt-14 grid md:grid-cols-2 gap-5">
+      <!-- Chapa y pintura -->
+      <article class="reveal md:row-span-2 relative overflow-hidden bg-coal border border-line rounded-3xl hover:border-brand/60 transition flex flex-col">
+        <img src="https://images.unsplash.com/photo-1676035291793-645c307e5a4e?w=1200&q=70&auto=format&fit=crop" alt="Pintor trabajando en un coche" class="w-full h-56 object-cover">
+        <div class="p-7 flex flex-col flex-1">
+          <p class="text-xs tracking-[0.25em] uppercase text-brand font-semibold">Especialidad</p>
+          <h3 class="font-display text-3xl font-semibold mt-2">Chapa y pintura</h3>
+          <p class="mt-3 text-mist leading-relaxed">Antes de pintar, nuestro departamento técnico hace un estudio previo en dos fases: primero valora la preparación o fondeado de la superficie y después el acabado y el color, que puede ir en varias capas.</p>
+          <ul class="mt-5 grid grid-cols-2 gap-x-4 gap-y-2 text-sm">
+            <li class="flex gap-2"><span class="text-brand">■</span>Pintado de piezas nuevas</li>
+            <li class="flex gap-2"><span class="text-brand">■</span>Pintado superficial</li>
+            <li class="flex gap-2"><span class="text-brand">■</span>Daño fuerte</li>
+            <li class="flex gap-2"><span class="text-brand">■</span>Daño medio</li>
+            <li class="flex gap-2"><span class="text-brand">■</span>Daño leve</li>
+            <li class="flex gap-2"><span class="text-brand">■</span>Reparación de arañazos</li>
+          </ul>
+          <p class="mt-auto pt-6 text-sm text-mist">Bancada para vehículos con grandes deformaciones.</p>
+        </div>
+      </article>
+      <!-- Mecánica -->
+      <article class="reveal bg-coal border border-line rounded-3xl p-7 hover:border-brand/60 transition">
+        <div class="flex items-center gap-4">
+          <div class="w-12 h-12 rounded-2xl bg-brand/10 text-brand grid place-items-center shrink-0"><svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path d="M14.7 6.3a4 4 0 0 0-5.4 5.4L3 18l3 3 6.3-6.3a4 4 0 0 0 5.4-5.4l-2.5 2.5-2.4-.6-.6-2.4z"/></svg></div>
+          <h3 class="font-display text-2xl font-semibold">Mecánica</h3>
+        </div>
+        <p class="mt-4 text-sm text-mist leading-relaxed">Mecánica general y rápida · Puesta a punto · Revisiones · Pre-ITV · Dirección · Amortiguación · Frenos · Correas · Filtros y aceite · Aire acondicionado (reparación y carga).</p>
+      </article>
+      <!-- Neumáticos -->
+      <article class="reveal bg-coal border border-line rounded-3xl p-7 hover:border-brand/60 transition">
+        <div class="flex items-center gap-4">
+          <div class="w-12 h-12 rounded-2xl bg-brand/10 text-brand grid place-items-center shrink-0"><svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="3"/><path d="M12 3v6M12 15v6M3 12h6M15 12h6"/></svg></div>
+          <h3 class="font-display text-2xl font-semibold">Neumáticos</h3>
+        </div>
+        <p class="mt-4 text-sm text-mist leading-relaxed">Turismos, 4x4, monovolúmenes y furgonetas. Michelin, Continental, Pirelli, Bridgestone y Hankook. Montaje, equilibrado, paralelo y reparación de pinchazos.</p>
+      </article>
+      <!-- Electricidad -->
+      <article class="reveal md:col-span-2 bg-coal border border-line rounded-3xl p-7 hover:border-brand/60 transition grid md:grid-cols-3 gap-6 items-center">
+        <div class="flex items-center gap-4">
+          <div class="w-12 h-12 rounded-2xl bg-brand/10 text-brand grid place-items-center shrink-0"><svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path d="M13 2 4 14h7l-1 8 9-12h-7z"/></svg></div>
+          <h3 class="font-display text-2xl font-semibold">Electricidad y diagnosis</h3>
+        </div>
+        <p class="md:col-span-2 text-sm text-mist leading-relaxed">Detectamos y solucionamos averías eléctricas en cualquier vehículo con maquinaria de diagnosis de última generación. Te asesoramos y te damos un presupuesto a medida, sin compromiso.</p>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- ASEGURADORAS -->
+<section id="seguros" class="px-4 sm:px-6 pb-24">
+  <div class="reveal max-w-6xl mx-auto rounded-3xl border border-line bg-gradient-to-br from-brand/20 via-coal to-coal p-8 sm:p-12">
+    <div class="grid md:grid-cols-3 gap-8 items-center">
+      <div class="md:col-span-2">
+        <p class="text-xs tracking-[0.3em] uppercase text-brand font-semibold">¿Has tenido un golpe?</p>
+        <h2 class="font-display font-bold mt-3 text-3xl md:text-4xl">Trabajamos con todas las aseguradoras</h2>
+        <p class="mt-4 text-mist leading-relaxed max-w-2xl">Estamos concertados con compañías líderes. Y para que no te quedes sin coche, te ofrecemos vehículo de sustitución o servicio de recogida y entrega. Consúltanos para reservarlo.</p>
+      </div>
+      <ul class="space-y-3 text-sm">
+        <li class="flex gap-3 items-center"><span class="w-7 h-7 rounded-full bg-brand text-white grid place-items-center text-xs">✓</span> Vehículo de sustitución</li>
+        <li class="flex gap-3 items-center"><span class="w-7 h-7 rounded-full bg-brand text-white grid place-items-center text-xs">✓</span> Recogida y entrega del vehículo</li>
+        <li class="flex gap-3 items-center"><span class="w-7 h-7 rounded-full bg-brand text-white grid place-items-center text-xs">✓</span> Presupuesto sin compromiso</li>
+      </ul>
+    </div>
+    <div class="mt-10 grid grid-cols-2 md:grid-cols-4 gap-3">
+      <div class="rounded-2xl border border-line bg-ink/60 py-5 text-center font-display text-lg tracking-wide">Mutua Madrileña</div>
+      <div class="rounded-2xl border border-line bg-ink/60 py-5 text-center font-display text-lg tracking-wide">Mapfre</div>
+      <div class="rounded-2xl border border-line bg-ink/60 py-5 text-center font-display text-lg tracking-wide">Allianz</div>
+      <div class="rounded-2xl border border-line bg-ink/60 py-5 text-center font-display text-lg tracking-wide">Fénix</div>
+    </div>
+  </div>
+</section>
+
+<!-- CONFIGURADOR -->
+<section id="configurador" class="py-24 px-4 sm:px-6 bg-coal border-y border-line">
+  <div class="max-w-6xl mx-auto">
+    <div class="reveal grid md:grid-cols-2 gap-8 items-end">
+      <div>
+        <p class="text-xs tracking-[0.3em] uppercase text-brand font-semibold">Configurador 3D</p>
+        <h2 class="font-display font-bold mt-3 text-4xl md:text-5xl">Prueba el color de tu coche en 3D</h2>
+      </div>
+      <p class="text-mist leading-relaxed">¿Pensando en cambiar de color? Prueba tonos y acabados brillo, metalizado o mate, el tintado de lunas y la altura de la suspensión sobre un coche en 3D. Gíralo con el ratón o el dedo y tráenos tu idea.</p>
+    </div>
+    <div class="reveal mt-12 relative rounded-3xl overflow-hidden border border-line bg-ink aspect-[4/5] sm:aspect-[16/10] lg:aspect-[16/9]">
+      <div id="cfgCover" class="absolute inset-0 z-10 grid place-items-center">
+        <img src="https://images.unsplash.com/photo-1503376780353-7e6692767b70?w=1600&q=70&auto=format&fit=crop" alt="" class="absolute inset-0 w-full h-full object-cover opacity-40">
+        <div class="absolute inset-0 bg-gradient-to-t from-ink to-ink/40"></div>
+        <button id="cfgStart" class="relative flex flex-col items-center gap-4 group">
+          <span class="w-20 h-20 rounded-full bg-brand text-white grid place-items-center shadow-[0_0_60px_rgba(227,38,47,.55)] group-hover:scale-105 transition">
+            <svg width="30" height="30" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+          </span>
+          <span class="font-display text-xl tracking-wider">Abrir configurador 3D</span>
+          <span class="text-sm text-mist">Carga unos 17 MB</span>
+        </button>
+      </div>
+      <iframe id="cfgFrame" title="Configurador 3D" class="absolute inset-0 w-full h-full" loading="lazy" allow="fullscreen"></iframe>
+    </div>
+    <div class="mt-5 flex flex-wrap items-center justify-between gap-3 text-sm text-mist">
+      <div class="flex flex-wrap gap-2">
+        <span class="px-3 py-1.5 rounded-full border border-line">12 colores + personalizado</span>
+        <span class="px-3 py-1.5 rounded-full border border-line">Brillo · Metal · Mate</span>
+        <span class="px-3 py-1.5 rounded-full border border-line">Tintado 0–100 %</span>
+      </div>
+      <a href="configurador.html" target="_blank" class="text-chalk hover:text-brand underline underline-offset-4">Abrir a pantalla completa ↗</a>
+    </div>
+  </div>
+</section>
+
+<!-- PROCESO -->
+<section id="proceso" class="py-24 px-4 sm:px-6">
+  <div class="max-w-6xl mx-auto grid lg:grid-cols-2 gap-14 items-center">
+    <div class="reveal relative">
+      <img src="https://images.unsplash.com/photo-1786489785778-a163f38b7c87?w=1200&q=70&auto=format&fit=crop" alt="Preparación de un paragolpes antes de pintar" class="w-full aspect-[4/5] object-cover rounded-3xl">
+      <div class="absolute -bottom-6 -right-2 sm:-right-6 bg-brand text-white rounded-2xl px-6 py-5 shadow-2xl">
+        <p class="font-display text-2xl font-bold leading-none">Sin compromiso</p>
+        <p class="text-sm font-medium mt-1">Presupuesto a tu medida</p>
+      </div>
+    </div>
+    <div>
+      <p class="reveal text-xs tracking-[0.3em] uppercase text-brand font-semibold">Cómo trabajamos</p>
+      <h2 class="reveal font-display font-bold mt-3 text-4xl md:text-5xl">Un trabajo meticuloso, paso a paso</h2>
+      <ol class="mt-10 space-y-7">
+        <li class="reveal flex gap-5"><span class="font-display text-brand text-2xl font-bold w-10 shrink-0">01</span><div><h3 class="font-display text-xl font-semibold">Diagnóstico</h3><p class="text-mist mt-1">Revisamos el daño o la avería con maquinaria de última generación.</p></div></li>
+        <li class="reveal flex gap-5"><span class="font-display text-brand text-2xl font-bold w-10 shrink-0">02</span><div><h3 class="font-display text-xl font-semibold">Presupuesto o peritación</h3><p class="text-mist mt-1">Presupuesto sin compromiso, o gestión directa con tu aseguradora.</p></div></li>
+        <li class="reveal flex gap-5"><span class="font-display text-brand text-2xl font-bold w-10 shrink-0">03</span><div><h3 class="font-display text-xl font-semibold">Preparación y color</h3><p class="text-mist mt-1">Fondeado de la superficie y estudio del acabado y del color en varias capas.</p></div></li>
+        <li class="reveal flex gap-5"><span class="font-display text-brand text-2xl font-bold w-10 shrink-0">04</span><div><h3 class="font-display text-xl font-semibold">Reparación y entrega</h3><p class="text-mist mt-1">Tu coche, como nuevo. Con recogida y entrega si lo necesitas.</p></div></li>
+      </ol>
+    </div>
+  </div>
+</section>
+
+<!-- GALERÍA -->
+<section class="px-4 sm:px-6 pb-24">
+  <div class="max-w-6xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-4">
+    <img src="https://images.unsplash.com/photo-1780558852670-3f49298ecc1f?w=800&q=70&auto=format&fit=crop" alt="Pulido de un capó" class="reveal w-full aspect-square object-cover rounded-3xl">
+    <img src="https://images.unsplash.com/photo-1619642751034-765dfdf7c58e?w=800&q=70&auto=format&fit=crop" alt="Mecánico trabajando en un motor" class="reveal w-full aspect-square object-cover rounded-3xl md:translate-y-8">
+    <img src="https://images.unsplash.com/photo-1625047509248-ec889cbff17f?w=800&q=70&auto=format&fit=crop" alt="Revisión de motor" class="reveal w-full aspect-square object-cover rounded-3xl">
+    <img src="https://images.unsplash.com/photo-1780558852671-e47265577239?w=800&q=70&auto=format&fit=crop" alt="Abrillantado con pulidora" class="reveal w-full aspect-square object-cover rounded-3xl md:translate-y-8">
+  </div>
+</section>
+
+<!-- CONTACTO + HORARIO -->
+<section id="contacto" class="py-24 px-4 sm:px-6 grain bg-coal border-y border-line">
+  <div class="max-w-6xl mx-auto grid lg:grid-cols-5 gap-10">
+    <div class="lg:col-span-2 reveal">
+      <p class="text-xs tracking-[0.3em] uppercase text-brand font-semibold">Contacto</p>
+      <h2 class="font-display font-bold mt-3 text-4xl md:text-5xl">Pide tu presupuesto</h2>
+      <p class="mt-4 text-mist leading-relaxed">Cuéntanos qué le pasa a tu coche o llámanos al <a href="tel:+34910616755" class="text-chalk hover:text-brand font-semibold">91 061 67 55</a>.</p>
+
+      <div class="mt-10 bg-ink border border-line rounded-3xl p-7">
+        <h3 class="font-display text-xl font-semibold">Horario de atención</h3>
+        <table class="w-full mt-4 text-sm">
+          <tr class="border-b border-line"><td class="py-3 text-mist">Lunes – Jueves</td><td class="py-3 text-right">08:00 – 14:00 · 15:30 – 18:30</td></tr>
+          <tr class="border-b border-line"><td class="py-3 text-mist">Viernes</td><td class="py-3 text-right">07:00 – 15:00</td></tr>
+          <tr><td class="py-3 text-mist">Sábado y domingo</td><td class="py-3 text-right text-brand">Cerrado</td></tr>
+        </table>
+      </div>
+    </div>
+
+    <form id="form" class="lg:col-span-3 reveal bg-ink border border-line rounded-3xl p-7 sm:p-9 grid sm:grid-cols-2 gap-4">
+      <label><span class="text-sm text-mist">Nombre</span><input class="input mt-2" name="nombre" required placeholder="Tu nombre"></label>
+      <label><span class="text-sm text-mist">Teléfono</span><input class="input mt-2" name="tel" type="tel" required placeholder="Tu teléfono"></label>
+      <label><span class="text-sm text-mist">Marca y modelo</span><input class="input mt-2" name="coche" required placeholder="Ej. Renault Clio"></label>
+      <label><span class="text-sm text-mist">Servicio</span>
+        <select class="input mt-2" name="servicio">
+          <option>Chapa y pintura</option><option>Mecánica</option><option>Neumáticos</option><option>Electricidad / diagnosis</option><option>Pre-ITV</option><option>Aire acondicionado</option>
+        </select>
+      </label>
+      <label class="sm:col-span-2"><span class="text-sm text-mist">¿Va por seguro?</span>
+        <select class="input mt-2" name="seguro"><option>No</option><option>Sí</option><option>No lo sé todavía</option></select>
+      </label>
+      <label class="sm:col-span-2"><span class="text-sm text-mist">Mensaje</span><textarea class="input mt-2 min-h-[120px]" name="msg" placeholder="Cuéntanos con detalle"></textarea></label>
+      <label class="sm:col-span-2 flex items-start gap-3 text-sm text-mist"><input type="checkbox" required class="mt-1 accent-[#e3262f]"> He leído y acepto la política de privacidad.</label>
+      <div class="sm:col-span-2 flex justify-end">
+        <button class="bg-brand hover:bg-brandDark text-white font-semibold px-8 py-3.5 rounded-full transition">Enviar consulta</button>
+      </div>
+      <p id="ok" class="hidden sm:col-span-2 text-center bg-brand/10 border border-brand/40 text-chalk rounded-2xl py-4">✓ ¡Gracias! Te contactaremos lo antes posible. (Demo)</p>
+    </form>
+  </div>
+</section>
+
+<!-- DÓNDE -->
+<section id="donde" class="py-24 px-4 sm:px-6">
+  <div class="max-w-6xl mx-auto grid md:grid-cols-5 gap-5">
+    <div class="md:col-span-2 reveal bg-coal border border-line rounded-3xl p-8 flex flex-col">
+      <p class="text-xs tracking-[0.3em] uppercase text-brand font-semibold">Dónde estamos</p>
+      <h2 class="font-display font-bold mt-3 text-3xl">Reparaciones Automovilísticas Stop</h2>
+      <p class="mt-4 text-mist leading-relaxed">Calle Lube, 1<br>28890 Loeches (Madrid)</p>
+      <div class="mt-8 space-y-3">
+        <a href="tel:+34910616755" class="flex items-center gap-3 hover:text-brand"><span class="w-10 h-10 rounded-full border border-line grid place-items-center">☎</span> 91 061 67 55</a>
+      </div>
+      <a href="https://www.google.com/maps/search/?api=1&query=Calle+Lube+1+28890+Loeches" target="_blank" rel="noopener" class="mt-auto pt-8 text-brand font-semibold hover:underline">Cómo llegar ↗</a>
+    </div>
+    <iframe class="md:col-span-3 reveal w-full min-h-[360px] rounded-3xl border border-line grayscale invert-[.9] contrast-[.9]" title="Mapa: Calle Lube 1, Loeches" loading="lazy"
+      src="https://www.google.com/maps?q=Calle+Lube+1,+28890+Loeches,+Madrid&z=15&output=embed"></iframe>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer class="border-t border-line">
+  <div class="stripe h-1.5 opacity-80"></div>
+  <div class="max-w-6xl mx-auto px-4 sm:px-6 py-10 flex flex-col md:flex-row gap-6 justify-between text-sm text-mist">
+    <div>
+      <p class="font-display font-bold text-xl text-chalk tracking-wider">STOP <span class="text-brand">·</span> Reparaciones Automovilísticas, S.L.</p>
+      <p class="mt-2">Calle Lube, 1 · 28890 Loeches (Madrid) · 91 061 67 55</p>
+    </div>
+    <div class="md:text-right">
+      <p>Boceto de diseño · Aviso legal · Privacidad · Cookies</p>
+      <p class="mt-2 text-xs">Fotos: Unsplash · Modelo 3D "Porsche 911 GT3" por Outlaw Games (CC BY-NC 4.0)</p>
+    </div>
+  </div>
+</footer>
+
+<!-- Llamar flotante -->
+<a href="tel:+34910616755" class="fixed bottom-5 right-5 z-40 w-14 h-14 rounded-full bg-brand grid place-items-center shadow-xl shadow-brand/30 hover:scale-105 transition" aria-label="Llamar al taller">
+  <svg width="24" height="24" viewBox="0 0 24 24" fill="#fff"><path d="M6.6 10.8a15.1 15.1 0 0 0 6.6 6.6l2.2-2.2a1 1 0 0 1 1-.25 11.4 11.4 0 0 0 3.6.57 1 1 0 0 1 1 1V20a1 1 0 0 1-1 1A17 17 0 0 1 3 4a1 1 0 0 1 1-1h3.5a1 1 0 0 1 1 1c0 1.25.2 2.45.57 3.57a1 1 0 0 1-.25 1z"/></svg>
+</a>
+
+<script>
+  // menú móvil
+  const menu = document.getElementById('menu');
+  document.getElementById('menuBtn').onclick = () => menu.classList.toggle('hidden');
+  menu.querySelectorAll('a').forEach(a => a.onclick = () => menu.classList.add('hidden'));
+  // fondo del nav al hacer scroll
+  const nav = document.getElementById('nav');
+  addEventListener('scroll', () => { nav.classList.toggle('bg-ink/90', scrollY > 40); nav.classList.toggle('backdrop-blur', scrollY > 40); }, { passive:true });
+  // animaciones al aparecer
+  const io = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) { e.target.classList.add('on'); io.unobserve(e.target); } }), { threshold:.12 });
+  document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+  // configurador: se carga solo al pulsar (pesa ~17 MB)
+  document.getElementById('cfgStart').onclick = () => {
+    document.getElementById('cfgFrame').src = 'configurador.html';
+    document.getElementById('cfgCover').remove();
+  };
+  // formulario (demo)
+  document.getElementById('form').onsubmit = e => {
+    e.preventDefault();
+    document.getElementById('ok').classList.remove('hidden');
+    e.target.reset();
+  };
+</script>
+</body>
+</html>
